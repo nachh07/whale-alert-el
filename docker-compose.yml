@@ -37,6 +37,11 @@ x-airflow-common-env: &airflow-common-env
 
 x-airflow-common: &airflow-common
   image: whale-alert-airflow:latest
+  # Build the custom image locally — every developer runs `docker compose up --build -d`
+  # so the image is never pulled from Docker Hub (it doesn't exist there).
+  build:
+    context: .
+    dockerfile: Dockerfile
   env_file:
     - .env
   environment:
@@ -82,7 +87,7 @@ services:
   # MinIO — Object Storage
   # --------------------------------------------------------------------------
   minio:
-    image: minio/minio:latest
+    image: quay.io/minio/minio:latest   # quay.io = registry oficial de MinIO, sin restricciones de Docker Hub
     container_name: whale-minio
     restart: unless-stopped
     env_file:
@@ -110,9 +115,6 @@ services:
   # --------------------------------------------------------------------------
   airflow-init:
     <<: *airflow-common
-    build:
-      context: .
-      dockerfile: Dockerfile
     container_name: whale-airflow-init
     entrypoint: /bin/bash
     command:

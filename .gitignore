@@ -16,6 +16,7 @@ env/
 
 # Environment secrets — NEVER commit the real .env
 .env
+.env_deleteme
 
 # Airflow runtime directories (created at runtime, managed via Docker volumes)
 logs/
